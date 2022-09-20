@@ -58,7 +58,6 @@ soup = BeautifulSoup(r.content, 'html')
 soup
 
 import time ## скачивание белых медведей, ошибка безопасного подключения
-import validators
 blocks = soup.findAll('div', class_='serp-item__preview')#нашли одну картинку
 number = 0
 for block in blocks:
@@ -70,7 +69,7 @@ for block in blocks:
         final_link2 = final_link1.replace('%2F', '/')
         final_link3 = (final_link2.split('&')[0])
         print(final_link3)
-        if validators.url(final_link3):
+        try:
             print('1')
             image_bytes = requests.get(f'{final_link3}').content
             time.sleep(1)
@@ -78,7 +77,5 @@ for block in blocks:
                 file.write(image_bytes)
             number += 1
             print(number)
-        else:
+        except:
             continue
-    #else:
-    #    print('none')
