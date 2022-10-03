@@ -1,32 +1,3 @@
-#import requests
-#from bs4 import BeautifulStoneSoup
-
-#url = "https://yandex.ru/images/search?text=polar%20bear"
-#r = requests.get(url)
-#r.text
-#soup = BeautifulSoup(r.text, 'html')
-#soup
-#block = soup.find('div', class_='serp-item')#нашли одну картинку
-#print(block)
-#image_preview_link = block.find('a').get('href')
-#image_preview_link
-#link = 'https://yandex.ru' + image_preview_link #нашли ссылку на открытую яндекс-картинку
-                                                #и перешли по ней, видим код страницы открытой картинки
-#link
-#r2 = requests.get(link).text
-#print(r2)
-#download_soup = BeautifulSoup(r2, 'html')
-#download_soup
-#download_block = download_soup.find('img', class_='serp-item__thumb')
-#print(download_block)
-#fine_link = download_block.get('data-thumb')
-#print(fine_link)
-#image_final_link = 'https:' + fine_link
-#print(image_final_link)
-
-
-
-
 import os
 path = '/home/cossieman2000/WORK/python/'
 project_name = 'dataset'
@@ -45,37 +16,46 @@ for f in folders:
     print(folder)
     createFolder(folder)
 
+!pip install requests
+!pip install bs4
 
-!pip install BeautifulSoup4
 import requests
 from bs4 import BeautifulSoup
+import time
 
-url = "https://yandex.ru/images/search?text=polar%20bear"
-r = requests.get(url)
-r.content
+url1_1 = "https://yandex.ru/images/search?p=" 
+url1_2 = "&text=polar%20bear"
+url2_2 = "&text=brown%20bear"
 
-soup = BeautifulSoup(r.content, 'html')
-soup
+def PictDownload (url1, url2, number, color):
+    for page in range(0, 37):
+        url = url1 + str(page) + url2
+        r = requests.get(url)
+        soup = BeautifulSoup(r.content, 'html')
+        blocks = soup.findAll('div', class_='serp-item__preview')
+        for block in blocks:
+            if (block):
+                download_link = block.find('a', class_='serp-item__link').get('href')
+                
+                final_link = (download_link.split('=')[3])
+                final_link1 = final_link.replace('%3A', ':')
+                final_link2 = final_link1.replace('%2F', '/')
+                final_link3 = (final_link2.split('&')[0])
+                try:
+                    final_link5 = requests.get(final_link3, timeout = 10)
+                except:
+                    continue
+                if (final_link5.status_code == 200):
+                    image_bytes = requests.get(f'{final_link3}').content
+                    time.sleep(1)
+                    with open('/home/cossieman2000/WORK/python/dataset/' + str(color) + ' bear/' + str(number).zfill(4) + '.jpg', 'wb') as file:
+                        file.write(image_bytes)
+                    number += 1
+                    time.sleep(7)
+                    print(number)
 
-import time ## скачивание белых медведей, ошибка безопасного подключения
-blocks = soup.findAll('div', class_='serp-item__preview')#нашли одну картинку
 number = 0
-for block in blocks:
-    if (block):
-        download_link = block.find('a', class_='serp-item__link').get('href')
-        
-        final_link = (download_link.split('=')[2])
-        final_link1 = final_link.replace('%3A', ':')
-        final_link2 = final_link1.replace('%2F', '/')
-        final_link3 = (final_link2.split('&')[0])
-        print(final_link3)
-        try:
-            print('1')
-            image_bytes = requests.get(f'{final_link3}').content
-            time.sleep(1)
-            with open(f'/home/cossieman2000/WORK/python/dataset/polar bear/{number}.jpg', 'wb') as file:
-                file.write(image_bytes)
-            number += 1
-            print(number)
-        except:
-            continue
+PictDownload(url1_1, url1_2, number)
+
+number = 0
+PictDownload(url1_1, url2_2, number)
