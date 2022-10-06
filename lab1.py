@@ -27,7 +27,10 @@ url1_1 = "https://yandex.ru/images/search?p="
 url1_2 = "&text=polar%20bear"
 url2_2 = "&text=brown%20bear"
 
-def PictDownload (url1, url2, number, color):
+import random
+import cv2
+
+def PictDownload (url1, url2, number, color, fullpath):
     for page in range(0, 37):
         url = url1 + str(page) + url2
         r = requests.get(url)
@@ -46,13 +49,17 @@ def PictDownload (url1, url2, number, color):
                 except:
                     continue
                 if (final_link5.status_code == 200):
-                    image_bytes = requests.get(f'{final_link3}').content
-                    time.sleep(1)
-                    with open('/home/cossieman2000/WORK/python/dataset/' + str(color) + ' bear/' + str(number).zfill(4) + '.jpg', 'wb') as file:
+                    image_bytes = final_link5.content
+                    time.sleep(random.random())
+                    image_path = fullpath + '/' + str(color) + ' bear/' + str(number).zfill(4) + '.jpg'
+                    with open(image_path, 'wb') as file:
                         file.write(image_bytes)
                     number += 1
-                    time.sleep(7)
                     print(number)
+                    image = cv2.imread(image_path) 
+                    cv2.imwrite(image_path, image)
+                    print(image.shape)
+    print(page)
 
 number = 0
 PictDownload(url1_1, url1_2, number)
