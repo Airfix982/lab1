@@ -18,6 +18,7 @@ for f in folders:
 
 !pip install requests
 !pip install bs4
+!pip install opencv-python
 
 import requests
 from bs4 import BeautifulSoup
@@ -30,6 +31,10 @@ url2_2 = "&text=brown%20bear"
 import random
 import cv2
 
+import random
+import cv2
+from skimage import io
+
 def PictDownload (url1, url2, number, color, fullpath):
     for page in range(0, 37):
         url = url1 + str(page) + url2
@@ -38,8 +43,7 @@ def PictDownload (url1, url2, number, color, fullpath):
         blocks = soup.findAll('div', class_='serp-item__preview')
         for block in blocks:
             if (block):
-                download_link = block.find('a', class_='serp-item__link').get('href')
-                
+                download_link = block.find('a', class_='serp-item__link').get('href')               
                 final_link = (download_link.split('=')[3])
                 final_link1 = final_link.replace('%3A', ':')
                 final_link2 = final_link1.replace('%2F', '/')
@@ -52,13 +56,20 @@ def PictDownload (url1, url2, number, color, fullpath):
                     image_bytes = final_link5.content
                     time.sleep(random.random())
                     image_path = fullpath + '/' + str(color) + ' bear/' + str(number).zfill(4) + '.jpg'
+                    print('1')
                     with open(image_path, 'wb') as file:
                         file.write(image_bytes)
-                    number += 1
-                    print(number)
-                    image = cv2.imread(image_path) 
-                    cv2.imwrite(image_path, image)
-                    print(image.shape)
+                    try:
+                        io.imread('/home/cossieman2000/WORK/python/dataset/polar bear/0000.jpg')
+                        number += 1
+                        print(number)
+                        print('normal image')
+                        image = cv2.imread(image_path)
+                        cv2.imwrite(image_path, image)
+                        print(image.shape)
+                    except:
+                        print('broken image')
+                        continue
     print(page)
 
 number = 0
