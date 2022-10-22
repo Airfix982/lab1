@@ -77,3 +77,60 @@ PictDownload(url1_1, url1_2, number)
 
 number = 0
 PictDownload(url1_1, url2_2, number)
+
+class Iterator_1:
+    def __init__(self, class_name):
+        print(class_name)
+        self.class_name = class_name
+        self.counter = 0
+
+    def __next__(self):
+        photo_path = '/home/cossieman2000/WORK/python/dataset/' + self.class_name + '/' + str(self.counter).zfill(4) + '.jpg'
+        if os.path.exists(photo_path):
+            self.counter += 1
+            print(photo_path)
+            return photo_path
+        else:
+            raise StopIteration
+
+path = '/home/cossieman2000/WORK/python/'
+annotation_name = 'annotation_1.csv'
+
+filepath = os.path.join(path, annotation_name)
+annotation_1 = open(filepath, "w")
+annotation_1.close()
+
+import pandas as pd
+
+iter1 = Iterator_1('polar bear')
+'''while(1):
+    photo_path = next(iter1)
+    print(photo_path)'''
+        #abs_path = #обработать photo_path таk, ктоб тут был абсолютный путь до фото
+        #rel_path = #относительный путь(только датасет и папки)
+        #photo_class = #буквенное название класса(полярный или бурый медведь), и записываем в таблицу
+path = '/home/cossieman2000/WORK/python/'
+annotation_name = 'annotation_1.csv'
+
+filepath = os.path.join(path, annotation_name)
+
+def WriteAnnotation(iter1):
+    #while(1):
+    columns = ['absolute path', 'relative path', 'class name']
+    annotation_1 = open(filepath, "a+")
+    for i in range(0,5):
+        #try:
+        photo_path = next(iter1)
+        print(photo_path)
+        relative_path = photo_path.split('WORK')[1]
+        print(relative_path)
+        class_name = relative_path.split('dataset/')[1].split(' bear')[0] + ' bear'
+        print(class_name)
+        datas = [photo_path, relative_path, class_name]
+        data = pd.DataFrame(datas, columns=columns)
+        data.to_csv(annotation_1, mode = 'a', index = False)
+        #except:
+            #break
+    annotation_1.close()
+
+WriteAnnotation(iter1)
