@@ -1,5 +1,5 @@
 
-import lab1
+from lab1 import create_folder
 import os
 import csv
 import shutil
@@ -136,9 +136,9 @@ if __name__=="__main__":
     project_name = 'new_data_1'
     folder = 'dataset'
     fullpath = os.path.join(path, project_name)
-    lab1.create_folder(fullpath)
+    create_folder(fullpath)
     new_path = os.path.join(fullpath, folder)
-    lab1.create_folder(new_path)
+    create_folder(new_path)
     print(new_path)
 
     """
@@ -172,9 +172,9 @@ if __name__=="__main__":
     project_name = 'new_data_2'
     folder = 'dataset'
     fullpath = os.path.join(path, project_name)
-    lab1.create_folder(fullpath)
+    create_folder(fullpath)
     new_path = os.path.join(fullpath, folder)
-    lab1.create_folder(new_path)
+    create_folder(new_path)
     print(new_path)
     annotation_name = 'annotation_3.csv'
     filepath = os.path.join(new_path, annotation_name)

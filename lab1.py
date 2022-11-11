@@ -4,7 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 import time
 import random
-import cv2
+#import cv2
 from skimage import io
 
 '''!pip install requests
