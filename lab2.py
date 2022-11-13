@@ -10,16 +10,44 @@ class iterator_1:
     def __init__(self, class_name):
         print(class_name)
         self.class_name = class_name
-        self.counter = 0
+        self.counter = -1
 
     def __next__(self):
+        self.counter += 1
         photo_path = '/home/cossieman2000/WORK/python/dataset/' + self.class_name + '/' + str(self.counter).zfill(4) + '.jpg'
         if os.path.exists(photo_path):
-            self.counter += 1
             print(photo_path)
             return photo_path
         else:
             raise StopIteration
+"""
+класс итератор
+"""
+
+class iterator_2:
+    def __init__(self, class_path):
+        print(class_path)
+        self.class_path = class_path
+        self.counter = -1
+
+    def __next__(self):
+        self.counter += 1
+        photo_path = self.class_path + '/' + str(self.counter).zfill(4) + '.jpg'
+        if os.path.exists(photo_path):
+            print(photo_path)
+            return photo_path
+        else:
+            return 0
+
+
+    def __prev__(self):
+        self.counter -= 1
+        photo_path = self.class_path + '/' + str(self.counter).zfill(4) + '.jpg'
+        if os.path.exists(photo_path):
+            print(photo_path)
+            return photo_path
+        else:
+            return 0
 """
 класс итератор
 """
