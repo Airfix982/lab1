@@ -7,6 +7,8 @@ from PyQt5 import QtWidgets
 import lab2
 import os
 import csv
+from lab1 import create_folder
+import random
 
 
 class Example(QWidget):
@@ -57,9 +59,17 @@ class Example(QWidget):
         self.btnPrevious2.clicked.connect(self.getPreviousPolar)
 
 
-        self.btnAnnotation1 = QPushButton('Writing annotation', self)
-        self.btnAnnotation1.move(0, 500)
+        self.btnAnnotation1 = QPushButton('first annotation', self)
+        self.btnAnnotation1.move(50, 525)
         self.btnAnnotation1.clicked.connect(self.firstAnnotation)
+
+        self.btnAnnotation2 = QPushButton('second annotation and first new dataset', self)
+        self.btnAnnotation2.move(200, 525)
+        self.btnAnnotation2.clicked.connect(self.secondAnnotation)
+
+        self.btnAnnotation3 = QPushButton('third annotation and second new dataset', self)
+        self.btnAnnotation3.move(500, 525)
+        self.btnAnnotation3.clicked.connect(self.thirdAnnotation)
 
 
 
@@ -68,7 +78,7 @@ class Example(QWidget):
         self.show()
 
     def firstAnnotation(self):
-        annotationName = 'annotation_1TEST.csv'
+        annotationName = 'annotation_1.csv'
         with open(annotationName, mode="w", encoding='utf-8') as write_file:
             file_writer = csv.writer(write_file, delimiter = ",", lineterminator="\r")
             file_writer.writerow(('Абсолютный путь', 'Относительный путь', 'Имя классa'))
@@ -76,6 +86,47 @@ class Example(QWidget):
         lab2.write_annotation(newIter1, annotationName)
         newIter2 = lab2.iterator_1('brown bear')
         lab2.write_annotation(newIter2, annotationName)
+
+    def secondAnnotation(self):
+        path = '/home/cossieman2000/WORK/python/'
+        project_name = 'new_data_1'
+        folder = 'dataset'
+        fullpath = os.path.join(path, project_name)
+        create_folder(fullpath)
+        new_path = os.path.join(fullpath, folder)
+        create_folder(new_path)
+        print(new_path)
+
+
+        annotationName = 'annotation_2.csv'
+        with open(annotationName, mode="w", encoding='utf-8') as write_file:
+            file_writer = csv.writer(write_file, delimiter = ",", lineterminator="\r")
+            file_writer.writerow(('Абсолютный путь', 'Относительный путь', 'Имя классa'))
+        newIter1 = lab2.iterator_1('polar bear')
+        lab2.copying_dataset_1(newIter1, annotationName, new_path)
+        newIter2 = lab2.iterator_1('brown bear')
+        lab2.copying_dataset_1(newIter2, annotationName, new_path)
+
+    def thirdAnnotation(self):
+        path = '/home/cossieman2000/WORK/python/'
+        project_name = 'new_data_2'
+        folder = 'dataset'
+        fullpath = os.path.join(path, project_name)
+        create_folder(fullpath)
+        new_path = os.path.join(fullpath, folder)
+        create_folder(new_path)
+        print(new_path)
+        annotation_name = 'annotation_3.csv'
+        with open(annotation_name, mode="w", encoding='utf-8') as write_file:
+            file_writer = csv.writer(write_file, delimiter = ",", lineterminator="\r")
+            file_writer.writerow(('Абсолютный путь', 'Относительный путь', 'Имя классa'))
+        numbers = (list(range(1,10001)))
+        random.shuffle(numbers)
+
+        newIter1 = lab2.iterator_1('polar bear')
+        lab2.copying_dataset_2(newIter1, annotation_name, new_path, numbers)
+        newIter2 = lab2.iterator_1('brown bear')
+        lab2.copying_dataset_2(newIter2, annotation_name, new_path, numbers)
 
 
     def getNextBrown(self):
