@@ -7,14 +7,14 @@ import glob
 import random
 
 class iterator_1:
-    def __init__(self, class_name):
+    def __init__(self, class_name: str):
         print(class_name)
         self.class_name = class_name
         self.counter = -1
 
     def __next__(self):
         self.counter += 1
-        photo_path = '/home/cossieman2000/WORK/python/dataset/' + self.class_name + '/' + str(self.counter).zfill(4) + '.jpg'
+        photo_path = 'dataset/' + self.class_name + '/' + str(self.counter).zfill(4) + '.jpg'
         if os.path.exists(photo_path):
             print(photo_path)
             return photo_path
@@ -25,7 +25,10 @@ class iterator_1:
 """
 
 class iterator_2:
-    def __init__(self, class_path):
+    """
+класс итератор
+"""
+    def __init__(self, class_path: str):
         print(class_path)
         self.class_path = class_path
         self.counter = -1
@@ -48,21 +51,20 @@ class iterator_2:
             return photo_path
         else:
             return 0
-"""
-класс итератор
-"""
 
 
-
-
-def write_annotation(iter1, annotation_name):
+def write_annotation(iter1: iterator_1, annotation_name: str):
+    """
+    Функция: Запись фалов в 1ю аннотацию
+    """
     while(True):
         try:
             photo_path = next(iter1)
+            photo_path = os.path.abspath(photo_path)
             print(photo_path)
-            relative_path = photo_path.split('WORK')[1]
+            relative_path = 'dataset' + photo_path.split('dataset/')[1]
             print(relative_path)
-            class_name = relative_path.split('dataset/')[1].split(' bear')[0] + ' bear'
+            class_name = photo_path.split('dataset/')[1].split(' bear')[0] + ' bear'
             print(class_name)
             with open(annotation_name, mode="a", encoding='utf-8') as write_file:
                 file_writer = csv.writer(write_file, delimiter = ",", lineterminator="\r")
@@ -71,64 +73,46 @@ def write_annotation(iter1, annotation_name):
             break
 
 
+def copying_dataset_1(Iter: iterator_1, annotation_name: str, new_path: str):
     """
-    Функция: Запись фалов в 1ю аннотацию
+    Копирование фото во новый первый датасет и запись во 2ю аннотацию
     """
-
-
-
-
-def copying_dataset_1(Iter, annotation_name, new_path):
     while(1):
-        try: 
-            print(new_path)         
+        try:
             photo_path = next(Iter)
-            print(photo_path)
-            half_path = photo_path.split('/dataset/')[1]
+            photo_path = os.path.abspath(photo_path)
+            half_path = photo_path.split('dataset/')[1]
             photo_new_name = half_path.split('/')[0] + '_' + half_path.split('/')[1]
-            print(photo_new_name)
             newpath = os.path.join(new_path, photo_new_name)
-            print(newpath)
             shutil.copyfile(photo_path, newpath)
-            relative_path = newpath.split('WORK')[1]
             class_name = half_path.split('/')[0]
             with open(annotation_name, mode="a", encoding='utf-8') as write_file:
                 file_writer = csv.writer(write_file, delimiter = ",", lineterminator="\r")
-                file_writer.writerow((newpath, relative_path, class_name))
+                file_writer.writerow((photo_path, newpath, class_name))
         except:
             break
-        """
-        Копирование фото во новый первый датасет и запись во 2ю аннотацию
-        """
 
 
-
-
-def copying_dataset_2(Iter, annotation_name, new_path, numbers):
-    while(True):
-        try: 
-            print(new_path)         
-            photo_path = next(Iter)
-            print(photo_path)
-            photo_new_name = os.path.join(new_path, str(numbers.pop(0)).zfill(5)) + '.jpg'
-            newpath = os.path.join(new_path, photo_new_name)
-            print(newpath)
-            shutil.copyfile(photo_path, newpath)
-            relative_path = newpath.split('WORK')[1]
-            class_name = photo_path.split('dataset/')[1].split(' bear')[0] + ' bear'
-            with open(annotation_name, mode="a", encoding='utf-8') as write_file:
-                file_writer = csv.writer(write_file, delimiter = ",", lineterminator="\r")
-                file_writer.writerow((newpath, relative_path, class_name))
-        except:
-            break
+def copying_dataset_2(Iter: iterator_1, annotation_name: str, new_path: str, numbers: list):
     """
     Функция: запись во 2ю аннотацию и копирование в новый вторый датасет
     """
-
-
-
-
-
+    while(True):
+        try:         
+            photo_path_old = next(Iter)
+            photo_path = os.path.abspath(photo_path_old)
+            photo_new_name = os.path.join(new_path, str(numbers.pop(0)).zfill(5)) + '.jpg'
+            abs_path = os.path.abspath(photo_new_name)
+            relative_path = photo_new_name
+            photo_new_name = photo_new_name.split('dataset/')[1]
+            newpath = os.path.join(new_path, photo_new_name)
+            shutil.copyfile(photo_path, newpath)
+            class_name = photo_path.split('dataset/')[1].split(' bear')[0] + ' bear'
+            with open(annotation_name, mode="a", encoding='utf-8') as write_file:
+                file_writer = csv.writer(write_file, delimiter = ",", lineterminator="\r")
+                file_writer.writerow((abs_path, relative_path, class_name))
+        except:
+            break
 
 if __name__=="__main__":
     path = '/home/cossieman2000/WORK/python/'
@@ -145,8 +129,6 @@ if __name__=="__main__":
     создание 1й аннотации
     """
 
-
-
     iter1 = iterator_1('polar bear')
     write_annotation(iter1, annotation_name)
     """
@@ -157,9 +139,6 @@ if __name__=="__main__":
     """
     Запись в 1ю аннотацию бурых медведей
     """
-
-
-
 
     project_name = 'new_data_1'
     folder = 'dataset'
@@ -181,9 +160,6 @@ if __name__=="__main__":
     создал 2ю аннотацию
     """
 
-
-
-
     Iter1 = iterator_1('polar bear')
     copying_dataset_1(Iter1, annotation_name, new_path)
     """
@@ -194,8 +170,6 @@ if __name__=="__main__":
     """
     Запись в 2ю аннотацию  и копирование в 1й новый датасет бурых медведей
     """
-
-
 
     project_name = 'new_data_2'
     folder = 'dataset'
@@ -214,9 +188,6 @@ if __name__=="__main__":
     """
     создание нового второго датасета и 3ей аннотации, списка рандомных чисел от 0 до 10000
     """
-
-
-
 
     Iter1 = iterator_1('polar bear')
     copying_dataset_2(Iter1, annotation_name, new_path, numbers)

@@ -1,7 +1,8 @@
+
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 import sys
-from PyQt5.QtWidgets import (QWidget, QPushButton, QLabel , QLineEdit, QHBoxLayout, QMainWindow, QInputDialog, QApplication)
+from PyQt5.QtWidgets import (QWidget, QPushButton, QLabel, QApplication)
 from PyQt5.QtGui import QPixmap
 from PyQt5 import QtWidgets
 import lab2
@@ -29,7 +30,6 @@ class Example(QWidget):
         path2 = self.datasetPath + '/polar bear'
         self.iter2 = lab2.iterator_2(path2)
         picturePath2 = next(self.iter2)    
-
 
 
         picture1 = QPixmap(picturePath1)
@@ -78,6 +78,10 @@ class Example(QWidget):
         self.show()
 
     def firstAnnotation(self):
+        """
+        method: writing the annotation of the initial dataset
+        
+        """
         annotationName = 'annotation_1.csv'
         with open(annotationName, mode="w", encoding='utf-8') as write_file:
             file_writer = csv.writer(write_file, delimiter = ",", lineterminator="\r")
@@ -88,12 +92,15 @@ class Example(QWidget):
         lab2.write_annotation(newIter2, annotationName)
 
     def secondAnnotation(self):
-        path = '/home/cossieman2000/WORK/python/'
+        """
+        method: creating the 2nd dataset;
+        writing the annotation of the second dataset
+        
+        """
         project_name = 'new_data_1'
         folder = 'dataset'
-        fullpath = os.path.join(path, project_name)
-        create_folder(fullpath)
-        new_path = os.path.join(fullpath, folder)
+        create_folder(project_name)
+        new_path = os.path.join(project_name, folder)
         create_folder(new_path)
         print(new_path)
 
@@ -108,14 +115,19 @@ class Example(QWidget):
         lab2.copying_dataset_1(newIter2, annotationName, new_path)
 
     def thirdAnnotation(self):
-        path = '/home/cossieman2000/WORK/python/'
+        """
+        method: creating the 3nd dataset;
+        writing the annotation of the third dataset
+        
+        """
         project_name = 'new_data_2'
         folder = 'dataset'
-        fullpath = os.path.join(path, project_name)
-        create_folder(fullpath)
-        new_path = os.path.join(fullpath, folder)
+        create_folder(project_name)
+        new_path = os.path.join(project_name, folder)
         create_folder(new_path)
         print(new_path)
+
+        
         annotation_name = 'annotation_3.csv'
         with open(annotation_name, mode="w", encoding='utf-8') as write_file:
             file_writer = csv.writer(write_file, delimiter = ",", lineterminator="\r")
@@ -130,6 +142,9 @@ class Example(QWidget):
 
 
     def getNextBrown(self):
+        """
+        method: getting next pictures of brown bears
+        """
         picturePath = next(self.iter1)
         picture = QPixmap(picturePath).scaled(500, 400)
         self.lbl1.setPixmap(picture)
@@ -143,6 +158,9 @@ class Example(QWidget):
             pass
 
     def getPreviousBrown(self):
+        """
+        method: getting privious pictures of brown bears
+        """
         picturePath = self.iter1.__prev__()
         picture = QPixmap(picturePath).scaled(500, 400)
         self.lbl1.setPixmap(picture)
@@ -157,6 +175,9 @@ class Example(QWidget):
 
 
     def getNextPolar(self):
+        """
+        method: getting next pictures of polar bears
+        """
         picturePath = next(self.iter2)
         picture = QPixmap(picturePath).scaled(500, 400)
         self.lbl2.setPixmap(picture)
@@ -170,6 +191,9 @@ class Example(QWidget):
             pass
 
     def getPreviousPolar(self):
+        """
+        method: getting previous pictures of polar bears
+        """
         picturePath = self.iter2.__prev__()
         picture = QPixmap(picturePath).scaled(500, 400)
         self.lbl2.setPixmap(picture)

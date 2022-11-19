@@ -14,8 +14,10 @@ from skimage import io
 
 
 
-
-def pict_download (url1, url2, number, color, fullpath):
+def pict_download (url1: str, url2: str, number: int, color: str, fullpath: str):
+    """
+    функция: скачиваем фото в соответствующие папки
+    """
     for page in range(0, 37):
         url = url1 + str(page) + url2
         r = requests.get(url)
@@ -49,21 +51,10 @@ def pict_download (url1, url2, number, color, fullpath):
                         print('broken image')
                         continue
     print(page)
-    """
-    функция: скачиваем фото в соответствующие папки
-    """
-def create_folder(path):
+
+def create_folder(path: str):
         if not os.path.exists(path):
             os.mkdir(path)
-
-
-
-
-
-
-
-
-
 
 if __name__=="__main__":
 
@@ -71,7 +62,7 @@ if __name__=="__main__":
     url1_1 = "https://yandex.ru/images/search?p=" 
     url1_2 = "&text=polar%20bear"
     url2_2 = "&text=brown%20bear"
-    path = '/home/cossieman2000/WORK/python/'
+    path = ''
     project_name = 'dataset'
     folders = ['polar bear', 'brown bear']
 
